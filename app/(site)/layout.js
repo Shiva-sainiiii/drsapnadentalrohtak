@@ -4,7 +4,7 @@ import Widgets from '@/components/Widgets';
 import Reveal from '@/components/Reveal';
 import Icon from '@/components/Icon';
 import Logo from '@/components/Logo';
-import { SITE } from '@/lib/site';
+import { SITE, DEV } from '@/lib/site';
 export default function SiteLayout({ children }) {
   return (
     <>
@@ -17,6 +17,10 @@ export default function SiteLayout({ children }) {
           <a href={SITE.yt} target="_blank" rel="noopener" aria-label="YouTube"><Icon n="yt" /></a>
           <a href={SITE.ig} target="_blank" rel="noopener" aria-label="Instagram"><Icon n="ig" /></a>
         </span>
+        <div className="fe">
+          <span>Website designed and developed by <a href={DEV.url} target="_blank" rel="noopener">{DEV.name}</a></span>
+          <Link href="/admin" rel="nofollow">Admin login</Link>
+        </div>
       </div></footer>
       <Widgets />
       <Reveal />

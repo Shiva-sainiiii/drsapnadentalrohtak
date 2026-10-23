@@ -19,8 +19,9 @@ const Stars = ({ n = 5 }) => <span className="sr">{[1, 2, 3, 4, 5].map((i) => <I
 
 export default async function Home() {
   const d = await getData();
-  // Pehle approved patient feedback, phir default reviews, kul max 6 cards
-  const reviews = [...d.reviews.map((r) => ({ k: r.id, t: r.comment, n: String(r.name || '').trim(), s: Math.min(5, Math.max(1, +r.rating || 5)) })), ...REVIEWS.map((t) => ({ k: t, t, n: '', s: 5 }))].slice(0, 6);
+  // Pehle approved patient feedback, phir default reviews, home pe max 5 cards
+  const all = [...d.reviews.map((r) => ({ k: r.id, t: r.comment, n: String(r.name || '').trim(), s: Math.min(5, Math.max(1, +r.rating || 5)) })), ...REVIEWS.map((t) => ({ k: t, t, n: '', s: 5 }))];
+  const reviews = all.slice(0, 5), more = all.length > 5; // home pe sirf 5, baaki /reviews page pe
   const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
   const mapQ = encodeURIComponent(SITE.map);
   return (
@@ -97,13 +98,15 @@ export default async function Home() {
 
       <section id="results" className="sec w" style={{ paddingTop: 0 }}>
         <div className="hd2 r"><div><h2>Real smiles, real results.</h2><p>Drag the slider to compare before and after.</p></div></div>
-        <BeforeAfter items={d.ba} />
-        <p className="note">Results vary from patient to patient. Treatment suitability is decided after examination.</p>
+        <div className="baw">
+          <BeforeAfter items={d.ba} />
+          <p className="note">Results vary from patient to patient. Treatment suitability is decided after examination.</p>
+        </div>
       </section>
 
       <section id="videos" className="sec w" style={{ paddingTop: 0 }}>
         <div className="hd2 r"><div><h2>Watch Dr. Sapna explain it.</h2><p>Procedures and dental advice from our YouTube channel.</p></div><a className="btn o" href={SITE.yt} target="_blank" rel="noopener"><Icon n="yt" />Visit channel</a></div>
-        <YouTubeGrid longs={d.longs} short={d.short} />
+        <YouTubeGrid longs={d.longs} shorts={d.shorts} />
       </section>
 
       <section id="gallery" className="sec" style={{ paddingTop: 0 }}>
@@ -125,7 +128,11 @@ export default async function Home() {
 
       <section id="reviews" className="sec w" style={{ paddingTop: 0 }}>
         <h2 className="r">Patients notice the difference.</h2>
-        <div id="rl">{reviews.map((r) => <div key={r.k} className="rc"><Stars n={r.s} /><p className="sf">{r.t}</p><small>{r.n ? `${r.n} · Patient review` : 'Patient review'}</small></div>)}</div>
+        <div id="rl">
+          {reviews.map((r) => <div key={r.k} className="rc"><Stars n={r.s} /><p className="sf">{r.t}</p><small>{r.n ? `${r.n} · Patient review` : 'Patient review'}</small></div>)}
+          {more && <div className="rc rm"><h3>More patient stories</h3><p>Read every review shared by our patients.</p><Link className="btn" href="/reviews">View all reviews <Icon n="ar" /></Link></div>}
+        </div>
+        {more && <div className="rb"><Link className="btn o" href="/reviews">View all reviews <Icon n="ar" /></Link></div>}
         <div className="dkp r"><div><h2>How was your visit?</h2><p>Tap a star and tell us about it. It takes ten seconds.</p></div><div><FeedbackForm /></div></div>
       </section>
 
