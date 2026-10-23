@@ -17,9 +17,9 @@ export default function SiteLayout({ children }) {
           <a href={SITE.yt} target="_blank" rel="noopener" aria-label="YouTube"><Icon n="yt" /></a>
           <a href={SITE.ig} target="_blank" rel="noopener" aria-label="Instagram"><Icon n="ig" /></a>
         </span>
-        <div className="fbt">
-          {DEV.show && <small className="dc">Designed &amp; Developed by <a href={DEV.link} target="_blank" rel="noopener">{DEV.name}</a> – {DEV.role}</small>}
-          <Link href="/admin" className="al" rel="nofollow" aria-label="Admin login"><Icon n="lock" />Admin</Link>
+        <div className="fe">
+          <span>Website designed and developed by <a href={DEV.url} target="_blank" rel="noopener">{DEV.name}</a></span>
+          <Link href="/admin" rel="nofollow">Admin login</Link>
         </div>
       </div></footer>
       <Widgets />

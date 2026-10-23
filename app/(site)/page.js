@@ -1,12 +1,11 @@
 import Link from 'next/link';
-import { SITE, SERVICES, FAQS, ABOUT, MICRO } from '@/lib/site';
-import { getData, getReviews } from '@/lib/data';
+import { SITE, SERVICES, FAQS, REVIEWS, ABOUT, MICRO } from '@/lib/site';
+import { getData } from '@/lib/data';
 import { cld } from '@/lib/img';
 import Icon from '@/components/Icon';
 import BeforeAfter from '@/components/BeforeAfter';
 import Gallery from '@/components/Gallery';
-import YouTubeGrid, { ShortsGrid } from '@/components/YouTubeGrid';
-import { Stars, ReviewGrid } from '@/components/Reviews';
+import YouTubeGrid from '@/components/YouTubeGrid';
 import Logo from '@/components/Logo';
 import LensView from '@/components/LensView';
 import Tour from '@/components/Tour';
@@ -16,12 +15,13 @@ export const revalidate = 60;
 const TILES = [['full-mouth-rehabilitation-rohtak', 's2', '/images/ba/ba1-after.jpg'], ['root-canal-treatment-rohtak', '', '/images/gallery/g2.jpg'], ['gum-treatment-rohtak', '', '/images/gallery/g3.jpg'], ['childrens-dentist-rohtak', '', '/images/gallery/g5.jpg'], ['smile-makeover-rohtak', 's2', '/images/ba/ba5-after.jpg'], ['dental-implants-rohtak', '', '/images/gallery/g1.jpg']];
 const MQ = ['Advanced Microscopic Dental Care', 'Microscope-assisted precision', 'Pain-free comfort', 'Periodontist and implantologist', 'Air polishing', 'Women-owned and LGBTQ+ friendly'];
 const USP = [['sh', 'Microscope-assisted precision', 'Clear structural detail for every procedure.'], ['sm', 'Pain-free approach', 'A light-handed technique designed for comfort.'], ['tooth', 'Expert-led care', 'Overseen by a certified Periodontist and Oral Implantologist.'], ['sp', 'Welcoming to everyone', 'Women-owned and LGBTQ+ friendly.']];
-const SHOW_REVIEWS = 5; // home page pe kitne latest reviews dikhne hain (baaki /reviews page pe)
+const Stars = ({ n = 5 }) => <span className="sr">{[1, 2, 3, 4, 5].map((i) => <Icon key={i} n="st" c={i <= n ? '' : 'e'} />)}</span>;
 
 export default async function Home() {
-  const [d, all] = await Promise.all([getData(), getReviews()]);
-  // Pehle approved patient feedback (naye pehle), phir default reviews. Home pe sirf latest 5
-  const reviews = all.slice(0, SHOW_REVIEWS);
+  const d = await getData();
+  // Pehle approved patient feedback, phir default reviews, home pe max 5 cards
+  const all = [...d.reviews.map((r) => ({ k: r.id, t: r.comment, n: String(r.name || '').trim(), s: Math.min(5, Math.max(1, +r.rating || 5)) })), ...REVIEWS.map((t) => ({ k: t, t, n: '', s: 5 }))];
+  const reviews = all.slice(0, 5), more = all.length > 5; // home pe sirf 5, baaki /reviews page pe
   const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
   const mapQ = encodeURIComponent(SITE.map);
   return (
@@ -30,7 +30,7 @@ export default async function Home() {
       <section id="top" className="w hero">
         <div>
           <div className="tag r"><Logo />Rohtak&apos;s microscope-assisted dental clinic</div>
-          <h1>{[['Advanced', 1], ['Microscopic', 1], ['Dental', 0], ['Care', 0], ['in Rohtak.', 0]].map(([w, h], i) => <span key={w}><span className={'fx' + (h ? ' hm' : '')} style={{ '--d': i }}>{w}</span>{' '}</span>)}</h1>
+          <h1>{[["Dr. Sapna's", 0], ['Advanced', 1], ['Microscopic', 1], ['Dental', 0], ['Care', 0], ['in Rohtak.', 0]].map(([w, h], i) => <span key={w}><span className={'fx' + (h ? ' hm' : '')} style={{ '--d': i }}>{w}</span>{' '}</span>)}</h1>
           <p className="lead r" style={{ '--i': 2 }}>Precision redefined. Pain-free dentistry. Gentle, meticulous care by Dr. Sapna Sharma, Periodontist and Oral Implantologist, using a high-magnification dental microscope.</p>
           <div className="cta r" style={{ '--i': 3 }}>
             <Link href="/#contact" className="btn">Book appointment <Icon n="ar" /></Link>
@@ -106,15 +106,8 @@ export default async function Home() {
 
       <section id="videos" className="sec w" style={{ paddingTop: 0 }}>
         <div className="hd2 r"><div><h2>Watch Dr. Sapna explain it.</h2><p>Procedures and dental advice from our YouTube channel.</p></div><a className="btn o" href={SITE.yt} target="_blank" rel="noopener"><Icon n="yt" />Visit channel</a></div>
-        <YouTubeGrid longs={d.longs} />
+        <YouTubeGrid longs={d.longs} shorts={d.shorts} />
       </section>
-
-      {d.shorts.length > 0 && (
-        <section id="shorts" className="sec w" style={{ paddingTop: 0 }}>
-          <div className="hd2 r"><div><h2>Dental shorts</h2><p>Quick answers in under a minute. Hover to preview, tap to play.</p></div><a className="btn o" href={`${SITE.yt}/shorts`} target="_blank" rel="noopener"><Icon n="yt" />More Shorts</a></div>
-          <ShortsGrid shorts={d.shorts} />
-        </section>
-      )}
 
       <section id="gallery" className="sec" style={{ paddingTop: 0 }}>
         <div className="w hd2 r"><div><h2>Inside the clinic</h2><p>Microscope-assisted treatment, up close. Hover to pause, tap to enlarge.</p></div></div>
@@ -135,11 +128,12 @@ export default async function Home() {
 
       <section id="reviews" className="sec w" style={{ paddingTop: 0 }}>
         <h2 className="r">Patients notice the difference.</h2>
-        <div className="rvw">
-          <ReviewGrid items={reviews} />
-          {all.length > reviews.length && <div className="rm r"><Link href="/reviews" className="btn o">View all reviews <Icon n="ar" /></Link></div>}
+        <div id="rl">
+          {reviews.map((r) => <div key={r.k} className="rc"><Stars n={r.s} /><p className="sf">{r.t}</p><small>{r.n ? `${r.n} · Patient review` : 'Patient review'}</small></div>)}
+          {more && <div className="rc rm"><h3>More patient stories</h3><p>Read every review shared by our patients.</p><Link className="btn" href="/reviews">View all reviews <Icon n="ar" /></Link></div>}
         </div>
-        <div id="feedback" className="dkp r"><div><h2>How was your visit?</h2><p>Tap a star and tell us about it. It takes ten seconds.</p></div><div><FeedbackForm /></div></div>
+        {more && <div className="rb"><Link className="btn o" href="/reviews">View all reviews <Icon n="ar" /></Link></div>}
+        <div className="dkp r"><div><h2>How was your visit?</h2><p>Tap a star and tell us about it. It takes ten seconds.</p></div><div><FeedbackForm /></div></div>
       </section>
 
       <section id="contact" className="w"><div className="cpn r">
