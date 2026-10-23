@@ -1,26 +1,47 @@
+import { Fragment } from 'react';
 import Link from 'next/link';
-import { SITE, REVIEWS } from '@/lib/site';
-import { getAllReviews } from '@/lib/data';
+import { SITE } from '@/lib/site';
+import { getReviews } from '@/lib/data';
 import Icon from '@/components/Icon';
+import { ReviewGrid } from '@/components/Reviews';
 
-export const revalidate = 60;
-const description = `Read what patients say about ${SITE.name} in Sector 2, Rohtak.`;
-export const metadata = { title: 'Patient reviews', description, alternates: { canonical: '/reviews' }, openGraph: { title: 'Patient reviews', description, url: '/reviews', type: 'website' } };
-const Stars = ({ n = 5 }) => <span className="sr">{[1, 2, 3, 4, 5].map((i) => <Icon key={i} n="st" c={i <= n ? '' : 'e'} />)}</span>;
+const PER = 9; // ek page pe kitne reviews
+const href = (p) => (p > 1 ? `/reviews?page=${p}` : '/reviews');
+const pageOf = async (sp, n) => Math.min(Math.max(1, parseInt((await sp).page, 10) || 1), n);
+const pagesOf = (all) => Math.max(1, Math.ceil(all.length / PER));
 
-export default async function Reviews() {
-  const rows = await getAllReviews();
-  // Approved feedback pehle, phir default reviews (home page jaisa hi order)
-  const all = [...rows.map((r) => ({ k: r.id, t: r.comment, n: String(r.name || '').trim(), s: Math.min(5, Math.max(1, +r.rating || 5)) })), ...REVIEWS.map((t) => ({ k: t, t, n: '', s: 5 }))];
+export async function generateMetadata({ searchParams }) {
+  const all = await getReviews(), p = await pageOf(searchParams, pagesOf(all));
+  const description = `What patients say about ${SITE.name} in Sector 2, Rohtak.`;
+  return { title: p > 1 ? `Patient Reviews (Page ${p})` : 'Patient Reviews', description, alternates: { canonical: href(p) }, openGraph: { title: 'Patient Reviews', description, url: href(p), type: 'website' } };
+}
+
+export default async function Reviews({ searchParams }) {
+  const all = await getReviews(), n = pagesOf(all), p = await pageOf(searchParams, n);
+  const items = all.slice((p - 1) * PER, p * PER);
+  // 1, last aur current ke aas-paas ke page numbers; beech me gap ho to "…"
+  const nums = [...new Set([1, n, p - 1, p, p + 1].filter((x) => x >= 1 && x <= n))].sort((a, b) => a - b);
   return (
     <main className="w sv">
       <p className="crumb"><Link href="/">Home</Link> / Reviews</p>
       <h1>Patient reviews</h1>
-      <p className="lead">What patients say about care at {SITE.short}, Rohtak.</p>
-      <div className="ra">{all.map((r) => <div key={r.k} className="rc"><Stars n={r.s} /><p className="sf">{r.t}</p><small>{r.n ? `${r.n} · Patient review` : 'Patient review'}</small></div>)}</div>
-      <div className="cta" style={{ marginBottom: 60 }}>
-        <Link className="btn" href="/#reviews">Share your feedback</Link>
-        <Link className="btn o" href="/#contact">Book a visit <Icon n="ar" /></Link>
+      <p className="lead">What patients say about their visits to {SITE.name} in Rohtak.</p>
+      <div className="rvw" style={{ marginBottom: 0 }}><ReviewGrid items={items} /></div>
+      {n > 1 && (
+        <div className="pg" role="navigation" aria-label="Reviews pages">
+          {p > 1 ? <Link href={href(p - 1)} rel="prev">Previous</Link> : <span className="off">Previous</span>}
+          {nums.map((x, i) => (
+            <Fragment key={x}>
+              {i > 0 && x - nums[i - 1] > 1 && <span className="dt" aria-hidden="true">…</span>}
+              {x === p ? <span className="on" aria-current="page">{x}</span> : <Link href={href(x)} aria-label={`Page ${x}`}>{x}</Link>}
+            </Fragment>
+          ))}
+          {p < n ? <Link href={href(p + 1)} rel="next">Next</Link> : <span className="off">Next</span>}
+        </div>
+      )}
+      <div className="cta" style={{ margin: '48px 0 90px' }}>
+        <Link href="/#feedback" className="btn">Share your experience <Icon n="ar" /></Link>
+        <Link href="/" className="btn o">Back to home</Link>
       </div>
     </main>
   );

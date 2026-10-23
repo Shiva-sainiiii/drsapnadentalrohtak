@@ -18,7 +18,7 @@ export default function Header() {
   const pick = (k) => { document.documentElement.dataset.theme = k; try { localStorage.setItem('theme', k); } catch {} setTh(k); setT(false); };
   return (
     <header id="hd"><div className="w"><div className="hi">
-      <Link href="/" className="lg"><Logo /><span className="bn2"><b>Dr. Sapna&apos;s</b><small>Advanced Microscopic Dental Care</small></span></Link>
+      <Link href="/" className="lg" aria-label="Dr. Sapna's Advanced Microscopic Dental Care, home"><Logo /></Link>
       <nav className={o ? 'o' : ''} onClick={(e) => e.target.closest('a') && setO(false)}>
         {NAV.map(([l, h]) => <Link key={l} href={h}>{l}</Link>)}
         <Link href="/#contact" className="btn">Book a visit</Link>
