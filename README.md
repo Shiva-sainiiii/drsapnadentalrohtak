@@ -4,7 +4,7 @@ Next.js 16 (App Router) website with admin panel, Gemini chatbot, local SEO page
 
 ## Setup (pehli baar, is order mein)
 
-1. **Supabase** (new project): SQL Editor mein `supabase.sql` paste karke Run karo. Phir Project Settings > API se `Project URL` aur **secret / service_role key** copy karo.
+1. **Supabase** (new project): SQL Editor mein `supabase.sql` paste karke Run karo. (Agar tables pehle bana chuke ho to sirf `supabase-update-v2.sql` run karo: ye 360 tour ka type add karta hai.) Phir Project Settings > API se `Project URL` aur **secret / service_role key** copy karo.
 2. **Cloudinary**: Dashboard > API Keys se `cloud name`, `API key`, `API secret` copy karo.
 3. **Gemini**: Google AI Studio se API key banao. Model: `gemini-3.1-flash-lite`.
 4. `.env.example` ko `.env.local` naam se copy karke saari values bharo. `ADMIN_PASSWORD` apna strong password, `ADMIN_SECRET` koi lamba random text.
@@ -39,3 +39,17 @@ Files seedha browser se Cloudinary pe upload hoti hain (video bade ho sakte hain
 - Har treatment ki alag page (`/services/...-rohtak`) with FAQ + schema, plus Dentist/LocalBusiness, FAQ, Breadcrumb schema, `sitemap.xml`, `robots.txt`, canonical, OG image.
 - Launch ke baad: Google Search Console mein domain add karke `https://drsapnadentalrohtak.com/sitemap.xml` submit karo. Google Business Profile mein website link ye domain karo. Naam, address aur phone har jagah same rakho (website, Google profile, Justdial, Instagram).
 - Ranking guarantee nahi hoti. Local ranking mein Google reviews aur GBP ka bhi bada role hota hai.
+
+## Feedback save nahi ho raha? (troubleshooting)
+
+1. `/admin` > **Feedback** tab > **Run check**. Ye batata hai kaunsi env key missing hai, Supabase key sahi type ki hai ya nahi, aur test insert chalta hai ya nahi.
+2. Sabse common wajah: `SUPABASE_SERVICE_KEY` mein **publishable / anon key** daal di. Yahan **secret key** (ya legacy `service_role`) chahiye.
+3. Vercel mein env var add/change karne ke baad **Redeploy** karna padta hai.
+4. `supabase.sql` run hua hai ya nahi (tables `media` aur `feedback` hone chahiye).
+5. Ab agar save fail ho to patient ko "could not send" dikhta hai (pehle galat "thank you" dikhta tha), aur error Vercel > Logs mein `[feedback]` ke naam se aata hai.
+
+## 360 tour kaise chalega
+
+1. Clinic ke 3-5 hisse 360 photo mein shoot karo (reception, waiting area, microscope wala treatment room, sterilisation). 360 camera ya phone ka Google Street View app (photo sphere) chalega. Photo **2:1 ratio (equirectangular)** honi chahiye.
+2. `/admin` > **360 Tour** > har photo ka naam daal ke upload karo. Site pe "Take a 360 tour" section apne aap aa jata hai (jab tak koi photo nahi hai, section hidden rehta hai). Viewer drag/pinch se chalta hai, fullscreen bhi hai.
+3. Alternative: Google ka indoor Street View banwa lo aur uska embed URL `lib/site.js` ke `tourEmbed` mein paste kar do. Tab ye iframe dikhega.

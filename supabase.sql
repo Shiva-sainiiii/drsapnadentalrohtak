@@ -1,7 +1,7 @@
 -- Run this once in Supabase: SQL Editor > New query > paste > Run
 create table if not exists media (
   id uuid primary key default gen_random_uuid(),
-  kind text not null check (kind in ('gallery','video','ba','doctor','site','youtube')),
+  kind text not null check (kind in ('gallery','video','ba','doctor','site','youtube','pano')),
   title text default '',
   category text default '',
   url text not null,

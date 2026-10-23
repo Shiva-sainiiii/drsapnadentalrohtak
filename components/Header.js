@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { SITE } from '@/lib/site';
 import Icon from './Icon';
+import Logo from './Logo';
 const TH = [['teal', 'Teal', '#0e7c7b'], ['ocean', 'Ocean', '#1d4ed8'], ['rose', 'Rose', '#be185d'], ['dark', 'Midnight', '#0b1f24']];
-const NAV = [['Treatments', '/#services'], ['Doctors', '/#doctors'], ['Results', '/#results'], ['Videos', '/#videos'], ['Reviews', '/#reviews'], ['Visit', '/#map']];
+const NAV = [['Microscope', '/#microscope'], ['Treatments', '/#services'], ['Doctors', '/#doctors'], ['Results', '/#results'], ['Videos', '/#videos'], ['Reviews', '/#reviews']];
 export default function Header() {
   const [o, setO] = useState(false), [t, setT] = useState(false), [th, setTh] = useState('teal');
   useEffect(() => { setTh(document.documentElement.dataset.theme || 'teal'); }, []);
@@ -17,7 +18,7 @@ export default function Header() {
   const pick = (k) => { document.documentElement.dataset.theme = k; try { localStorage.setItem('theme', k); } catch {} setTh(k); setT(false); };
   return (
     <header id="hd"><div className="w"><div className="hi">
-      <Link href="/" className="lg"><span className="lm"><Icon n="tooth" /></span><span>{SITE.short}</span></Link>
+      <Link href="/" className="lg"><Logo /><span className="bn2"><b>Dr. Sapna&apos;s</b><small>Advanced Microscopic Dental Care</small></span></Link>
       <nav className={o ? 'o' : ''} onClick={(e) => e.target.closest('a') && setO(false)}>
         {NAV.map(([l, h]) => <Link key={l} href={h}>{l}</Link>)}
         <Link href="/#contact" className="btn">Book a visit</Link>

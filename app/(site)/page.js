@@ -1,16 +1,19 @@
 import Link from 'next/link';
-import { SITE, SERVICES, FAQS, REVIEWS, ABOUT } from '@/lib/site';
+import { SITE, SERVICES, FAQS, REVIEWS, ABOUT, MICRO } from '@/lib/site';
 import { getData } from '@/lib/data';
 import { cld } from '@/lib/img';
 import Icon from '@/components/Icon';
 import BeforeAfter from '@/components/BeforeAfter';
 import Gallery from '@/components/Gallery';
 import YouTubeGrid from '@/components/YouTubeGrid';
+import Logo from '@/components/Logo';
+import LensView from '@/components/LensView';
+import Tour from '@/components/Tour';
 import { FeedbackForm, ContactForm } from '@/components/Forms';
 
 export const revalidate = 60;
-const TILES = [['root-canal-treatment-rohtak', 's2 c1b'], ['dental-implants-rohtak', 'c2b'], ['gum-treatment-rohtak', 'c3b'], ['smile-makeover-rohtak', 'c4b'], ['childrens-dentist-rohtak', 'c5b'], ['full-mouth-rehabilitation-rohtak', 's2 c6b']];
-const MQ = ['Microscope-assisted precision', 'Pain-free comfort', 'Periodontist and implantologist', 'Air polishing', 'Women-owned and LGBTQ+ friendly'];
+const TILES = [['full-mouth-rehabilitation-rohtak', 's2', '/images/ba/ba1-after.jpg'], ['root-canal-treatment-rohtak', '', '/images/gallery/g2.jpg'], ['gum-treatment-rohtak', '', '/images/gallery/g3.jpg'], ['childrens-dentist-rohtak', '', '/images/gallery/g5.jpg'], ['smile-makeover-rohtak', 's2', '/images/ba/ba5-after.jpg'], ['dental-implants-rohtak', '', '/images/gallery/g1.jpg']];
+const MQ = ['Advanced Microscopic Dental Care', 'Microscope-assisted precision', 'Pain-free comfort', 'Periodontist and implantologist', 'Air polishing', 'Women-owned and LGBTQ+ friendly'];
 const USP = [['sh', 'Microscope-assisted precision', 'Clear structural detail for every procedure.'], ['sm', 'Pain-free approach', 'A light-handed technique designed for comfort.'], ['tooth', 'Expert-led care', 'Overseen by a certified Periodontist and Oral Implantologist.'], ['sp', 'Welcoming to everyone', 'Women-owned and LGBTQ+ friendly.']];
 const Stars = () => <span className="sr">{[1, 2, 3, 4, 5].map((i) => <Icon key={i} n="st" />)}</span>;
 
@@ -23,9 +26,9 @@ export default async function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
       <section id="top" className="w hero">
         <div>
-          <div className="tag r"><Icon n="tooth" />Microscope-assisted dentist in Rohtak</div>
-          <h1>{['Precision', 'redefined.', 'Pain-free', 'dentistry', 'in Rohtak.'].map((w, i) => <span key={w}><span className="fx" style={{ '--d': i < 2 ? i : i + 1 }}>{w}</span>{' '}</span>)}</h1>
-          <p className="lead r" style={{ '--i': 2 }}>Gentle, meticulous care led by Dr. Sapna Sharma, Periodontist and Oral Implantologist. High magnification lets us see and treat what standard procedures miss.</p>
+          <div className="tag r"><Logo />Rohtak&apos;s microscope-assisted dental clinic</div>
+          <h1>{[['Advanced', 1], ['Microscopic', 1], ['Dental', 0], ['Care', 0], ['in Rohtak.', 0]].map(([w, h], i) => <span key={w}><span className={'fx' + (h ? ' hm' : '')} style={{ '--d': i }}>{w}</span>{' '}</span>)}</h1>
+          <p className="lead r" style={{ '--i': 2 }}>Precision redefined. Pain-free dentistry. Gentle, meticulous care by Dr. Sapna Sharma, Periodontist and Oral Implantologist, using a high-magnification dental microscope.</p>
           <div className="cta r" style={{ '--i': 3 }}>
             <Link href="/#contact" className="btn">Book appointment <Icon n="ar" /></Link>
             <a href={`tel:${SITE.tel}`} className="btn o"><Icon n="ph" />{SITE.phone}</a>
@@ -38,18 +41,34 @@ export default async function Home() {
             <g className="rg2"><circle cx="200" cy="200" r="172" fill="none" stroke="var(--ac)" strokeOpacity=".55" strokeWidth="2" strokeDasharray="46 300" strokeLinecap="round" /></g>
             <path d="M200 14v30M200 356v30M14 200h30M356 200h30" stroke="var(--ac)" strokeWidth="2.5" strokeLinecap="round" />
           </svg>
-          <div className="im lc"><img src={cld(d.hero, 800)} alt="Dr. Sapna Sharma, Periodontist and Oral Implantologist in Rohtak" width="800" height="800" fetchPriority="high" /></div>
-          <div className="im ls"><img src={cld(d.heroSmall, 400)} alt="Treatment under a dental microscope" width="243" height="304" loading="lazy" /></div>
+          <div className="im lc"><img src={cld(d.hero, 800)} alt="Dr. Sapna Sharma working under a dental microscope in Rohtak" width="640" height="640" fetchPriority="high" /></div>
+          <div className="im ls"><img src={cld(d.heroSmall, 400)} alt="Dr. Sapna Sharma, Periodontist and Oral Implantologist" width="400" height="400" loading="lazy" /></div>
           <div className="sk">Under the microscope<small>Every detail in focus</small></div>
         </div>
       </section>
 
       <div className="mqw"><div className="mq" aria-hidden="true"><div>{[...MQ, ...MQ].map((t, i) => <span key={i}>{t}</span>)}</div></div></div>
 
+      <section id="microscope" className="sec w" style={{ paddingTop: 0 }}><div className="mic r">
+        <LensView src={cld(d.lens, 1100)} alt="Close-up of teeth viewed under magnification" />
+        <div>
+          <div className="tag"><Logo />What makes us different</div>
+          <h2 style={{ marginTop: 18 }}>Advanced Microscopic Dental Care</h2>
+          <p style={{ marginTop: 14 }}>{MICRO.intro}</p>
+          <ul className="pl">{MICRO.pts.map((p) => <li key={p}><Icon n="ck" />{p}</li>)}</ul>
+          <div className="cta"><Link className="btn" href="/microscopic-dentistry-rohtak">How it works <Icon n="ar" /></Link><Link className="btn o" href="/#videos">Watch it in action</Link></div>
+        </div>
+      </div></section>
+
       <section id="services" className="sec w">
         <h2 className="r">Dental treatments in Rohtak, seen in detail.</h2>
-        <div className="bn">{TILES.map(([slug, cls], i) => { const s = SERVICES.find((x) => x.slug === slug); return (
-          <Link key={slug} href={`/services/${slug}`} className={`tl ${cls} r`} style={{ '--i': i % 3 }}><span className="ic"><Icon n={s.icon} /></span><div><h3>{s.name}</h3><p>{s.short}</p></div></Link>
+        <p className="r" style={{ marginTop: 14, maxWidth: '60ch' }}>Every treatment is planned and carried out with microscope-level care. Tap a treatment to learn more.</p>
+        <div className="bn">{TILES.map(([slug, cls, img], i) => { const s = SERVICES.find((x) => x.slug === slug); return (
+          <Link key={slug} href={`/services/${slug}`} className={`tl ph ${cls} r`} style={{ '--i': i % 3 }}>
+            <img src={img} alt={`${s.name} at ${SITE.short}, Rohtak`} loading="lazy" />
+            <span className="shade" />
+            <div className="pc"><span className="ic"><Icon n={s.icon} /></span><h3>{s.name}</h3><p>{s.short}</p><span className="go">Learn more <Icon n="ar" /></span></div>
+          </Link>
         ); })}</div>
         <div className="chips r">{SERVICES.map((s) => <Link key={s.slug} href={`/services/${s.slug}`}>{s.name}</Link>)}</div>
       </section>
@@ -85,10 +104,17 @@ export default async function Home() {
         <YouTubeGrid longs={d.longs} short={d.short} />
       </section>
 
-      <section id="gallery" className="sec w" style={{ paddingTop: 0 }}>
-        <h2 className="r">Inside the clinic</h2>
+      <section id="gallery" className="sec" style={{ paddingTop: 0 }}>
+        <div className="w hd2 r"><div><h2>Inside the clinic</h2><p>Microscope-assisted treatment, up close. Hover to pause, tap to enlarge.</p></div></div>
         <Gallery items={d.gallery} />
       </section>
+
+      {(SITE.tourEmbed || d.tour.length > 0) && (
+        <section id="tour" className="sec w" style={{ paddingTop: 0 }}>
+          <div className="hd2 r"><div><h2>Take a 360° tour of the clinic</h2><p>Drag to look around.</p></div></div>
+          {SITE.tourEmbed ? <iframe className="tv" src={SITE.tourEmbed} title="360 degree virtual tour of the clinic" loading="lazy" allowFullScreen /> : <Tour scenes={d.tour} />}
+        </section>
+      )}
 
       <section id="faq" className="sec w" style={{ paddingTop: 0 }}><div className="fq">
         <div className="r"><h2>Questions patients often ask</h2></div>

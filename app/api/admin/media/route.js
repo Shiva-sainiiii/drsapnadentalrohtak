@@ -5,7 +5,7 @@ import { destroy } from '@/lib/cloud';
 const no = () => Response.json({ error: 'Unauthorized' }, { status: 401 });
 const bad = (e) => Response.json({ error: String(e.message || e).slice(0, 300) }, { status: 500 });
 const done = () => revalidatePath('/', 'layout');
-const KINDS = ['gallery', 'video', 'ba', 'doctor', 'site', 'youtube'], UUID = /^[0-9a-f-]{36}$/;
+const KINDS = ['gallery', 'video', 'ba', 'doctor', 'site', 'youtube', 'pano'], UUID = /^[0-9a-f-]{36}$/;
 export async function GET() {
   if (!(await isAdmin())) return no();
   try { return Response.json(await sb('media?order=kind.asc,sort.asc,created_at.desc')); } catch (e) { return bad(e); }

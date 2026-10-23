@@ -6,8 +6,8 @@ export const viewport = { width: 'device-width', initialScale: 1, themeColor: '#
 export const metadata = {
   metadataBase: new URL(SITE.url),
   title: { default: `Dentist in Rohtak | ${SITE.name}`, template: `%s | ${SITE.short}` },
-  description: 'Microscope-assisted dental clinic in Sector 2, Rohtak. Dr. Sapna Sharma, Periodontist and Oral Implantologist. Root canal, dental implants, gum treatment, smile makeover, braces and children\'s dentistry.',
-  keywords: ['dentist in Rohtak', 'dental clinic Rohtak', 'root canal treatment Rohtak', 'dental implants Rohtak', 'periodontist Rohtak', 'gum treatment Rohtak', 'teeth whitening Rohtak', 'microscopic dentistry Rohtak', 'dentist Sector 2 Rohtak', "Dr. Sapna's Advanced Dental Care"],
+  description: "Advanced Microscopic Dental Care in Sector 2, Rohtak by Dr. Sapna Sharma, Periodontist and Oral Implantologist. Microscope-assisted root canal, dental implants, gum treatment, smile makeover, braces and children's dentistry.",
+  keywords: ['advanced microscopic dental care Rohtak', 'microscopic dentist Rohtak', 'dental microscope Rohtak', 'dentist in Rohtak', 'dental clinic Rohtak', 'root canal treatment Rohtak', 'dental implants Rohtak', 'periodontist Rohtak', 'gum treatment Rohtak', 'teeth whitening Rohtak', 'microscopic dentistry Rohtak', 'dentist Sector 2 Rohtak', "Dr. Sapna's Advanced Dental Care"],
   alternates: { canonical: '/' },
   openGraph: { type: 'website', locale: 'en_IN', siteName: SITE.name, url: '/', title: `Dentist in Rohtak | ${SITE.name}`, description: 'Microscope-assisted, pain-free dentistry in Sector 2, Rohtak.', images: [{ url: '/images/og.jpg', width: 1200, height: 630, alt: SITE.name }] },
   twitter: { card: 'summary_large_image' },

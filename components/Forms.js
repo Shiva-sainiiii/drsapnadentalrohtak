@@ -12,8 +12,10 @@ export function FeedbackForm() {
     setErr(er);
     if (Object.keys(er).length) return;
     setBusy(true);
-    try { await fetch('/api/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, rating: rate, comment: String(f.get('comment') || '').trim(), website: f.get('website') }) }); } catch {}
-    setBusy(false); setDone(true);
+    let ok = false;
+    try { ok = (await fetch('/api/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, rating: rate, comment: String(f.get('comment') || '').trim(), website: f.get('website') }) })).ok; } catch {}
+    setBusy(false);
+    if (ok) setDone(true); else setErr({ send: `Sorry, we could not send your feedback right now. Please try again, or WhatsApp us on ${SITE.phone}.` });
   }
   if (done) return <div className="ok2"><Icon n="ok" /><h3>Thank you</h3><p>Your {rate}-star feedback has been sent to the clinic.</p></div>;
   return (
@@ -24,6 +26,7 @@ export function FeedbackForm() {
       <div className={'f' + (err.name ? ' bad' : '')}><label htmlFor="rn">Your name</label><input id="rn" name="name" placeholder="Your name" autoComplete="name" /><div className="er">{err.name}</div></div>
       <div className="f"><label htmlFor="rt">Comment (optional)</label><textarea id="rt" name="comment" placeholder="Tell us about your visit" /></div>
       <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px' }} />
+      <div className="er">{err.send}</div>
       <div><button className="btn" disabled={busy}>Submit feedback</button></div>
     </form>
   );

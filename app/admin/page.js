@@ -1,9 +1,9 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
 
-const TABS = [['ba', 'Before / After'], ['gallery', 'Gallery'], ['youtube', 'YouTube'], ['doctor', 'Doctors'], ['site', 'Site images'], ['feedback', 'Feedback']];
+const TABS = [['ba', 'Before / After'], ['gallery', 'Gallery'], ['youtube', 'YouTube'], ['doctor', 'Doctors'], ['site', 'Site images'], ['pano', '360 Tour'], ['feedback', 'Feedback']];
 const DOCS = [['dr-sapna-sharma', 'Dr. Sapna Sharma'], ['dr-aarushi-vij', 'Dr. Aarushi Vij']];
-const SLOTS = [['hero-main', 'Hero main photo'], ['hero-small', 'Hero small photo'], ['about', 'About section photo']];
+const SLOTS = [['hero-main', 'Hero main photo'], ['hero-small', 'Hero small photo'], ['about', 'About section photo'], ['lens', 'Microscope section photo']];
 const ytId = (s) => (s.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/) || [])[1] || (/^[\w-]{11}$/.test(s.trim()) ? s.trim() : '');
 async function api(url, opt = {}) {
   const r = await fetch(url, { ...opt, headers: { 'Content-Type': 'application/json' } });
@@ -24,7 +24,7 @@ async function upload(file) {
 const post = (b) => api('/api/admin/media', { method: 'POST', body: JSON.stringify(b) });
 
 export default function Admin() {
-  const [ok, setOk] = useState(undefined), [rows, setRows] = useState([]), [fb, setFb] = useState([]), [tab, setTab] = useState('ba'), [msg, setMsg] = useState(''), [busy, setBusy] = useState(false), [pw, setPw] = useState('');
+  const [ok, setOk] = useState(undefined), [rows, setRows] = useState([]), [fb, setFb] = useState([]), [tab, setTab] = useState('ba'), [msg, setMsg] = useState(''), [health, setHealth] = useState(null), [busy, setBusy] = useState(false), [pw, setPw] = useState('');
   const load = useCallback(async () => {
     try { setRows(await api('/api/admin/media')); setFb(await api('/api/admin/feedback')); setOk(true); }
     catch (e) { if (e.message === 'Unauthorized') setOk(false); else { setOk(true); setMsg(e.message); } }
@@ -53,7 +53,7 @@ export default function Admin() {
         if (!files.length) throw new Error('Choose a file');
         for (const file of files) {
           const u = await upload(file);
-          await post({ kind: tab === 'gallery' ? (u.resource_type === 'video' ? 'video' : 'gallery') : tab, title: tab === 'gallery' ? title : '', category: f.get('cat') || '', ...u });
+          await post({ kind: tab === 'gallery' ? (u.resource_type === 'video' ? 'video' : 'gallery') : tab, title: tab === 'gallery' || tab === 'pano' ? title : '', category: f.get('cat') || '', ...u });
         }
       }
       form.reset(); await load(); setMsg('Saved. The website updates within a minute.');
@@ -63,6 +63,7 @@ export default function Admin() {
   const upd = async (id, patch) => { try { await api('/api/admin/media', { method: 'PATCH', body: JSON.stringify({ id, ...patch }) }); setRows((r) => r.map((x) => (x.id === id ? { ...x, ...patch } : x))); } catch (e) { setMsg(e.message); } };
   const del = async (id) => { if (!confirm('Delete this permanently?')) return; try { await api('/api/admin/media?id=' + id, { method: 'DELETE' }); setRows((r) => r.filter((x) => x.id !== id)); } catch (e) { setMsg(e.message); } };
   const delFb = async (id) => { if (!confirm('Delete this feedback?')) return; try { await api('/api/admin/feedback?id=' + id, { method: 'DELETE' }); setFb((r) => r.filter((x) => x.id !== id)); } catch (e) { setMsg(e.message); } };
+  const check = async () => { setHealth(null); try { setHealth(await api('/api/admin/health')); } catch (e) { setMsg(e.message); } };
   const out = async () => { await api('/api/admin/login', { method: 'DELETE' }); setOk(false); };
 
   if (ok === undefined) return <div className="adm"><p>Loading...</p></div>;
@@ -79,8 +80,9 @@ export default function Admin() {
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}><div><h1>Website admin</h1><p>Add, edit and delete the photos and videos shown on the website.</p></div><div><a className="btn o sm" href="/">View site</a> <button className="btn o sm" onClick={out}>Logout</button></div></div>
       <div className="tabs">{TABS.map(([k, n]) => <button key={k} className={tab === k ? 'on' : ''} onClick={() => { setTab(k); setMsg(''); }}>{n}</button>)}</div>
       {msg && <div className="msg" style={{ marginBottom: 16 }}>{msg}</div>}
-      {tab === 'feedback' ? (
-        fb.length ? fb.map((x) => <div className="row" key={x.id} style={{ gridTemplateColumns: '1fr auto' }}><div><b>{x.name}</b> {'★'.repeat(x.rating)}<br />{x.comment || <i>No comment</i>}<br /><small>{new Date(x.created_at).toLocaleString()}</small></div><button className="btn sm dng" onClick={() => delFb(x.id)}>Delete</button></div>) : <p>No feedback yet.</p>
+      {tab === 'feedback' ? (<>
+        <div className="box"><h3>Database check</h3><p>If feedback is not saving, run this. It tests the Supabase key, the tables and a test insert.</p><div><button className="btn sm" onClick={check}>Run check</button></div>{health && <pre style={{ whiteSpace: 'pre-wrap', fontSize: '.8rem' }}>{JSON.stringify(health, null, 2)}</pre>}</div>
+        {fb.length ? fb.map((x) => <div className="row" key={x.id} style={{ gridTemplateColumns: '1fr auto' }}><div><b>{x.name}</b> {'★'.repeat(x.rating)}<br />{x.comment || <i>No comment</i>}<br /><small>{new Date(x.created_at).toLocaleString()}</small></div><button className="btn sm dng" onClick={() => delFb(x.id)}>Delete</button></div>) : <p>No feedback yet.</p>}</>
       ) : (
         <>
           <form className="box" onSubmit={add}>
@@ -88,6 +90,7 @@ export default function Admin() {
             {tab === 'ba' && <><input name="title" placeholder="Title, e.g. Smile makeover with crowns" /><label>Before photo<input type="file" name="before" accept="image/*" /></label><label>After photo<input type="file" name="after" accept="image/*" /></label></>}
             {tab === 'gallery' && <><input name="title" placeholder="Caption (optional)" /><label>Photos or videos (you can pick many)<input type="file" name="file" accept="image/*,video/*" multiple /></label></>}
             {tab === 'youtube' && <><input name="title" placeholder="Video title" /><input name="link" placeholder="YouTube link or video ID" /><label><input type="checkbox" name="short" style={{ width: 'auto' }} /> This is a YouTube Short</label></>}
+            {tab === 'pano' && <><input name="title" placeholder="Scene name, e.g. Reception" /><label>360 photo (equirectangular, 2:1 ratio)<input type="file" name="file" accept="image/*" /></label></>}
             {tab === 'doctor' && <><select name="cat">{DOCS.map(([k, n]) => <option key={k} value={k}>{n}</option>)}</select><input type="file" name="file" accept="image/*" /><small>The latest photo is used. Delete the old one afterwards.</small></>}
             {tab === 'site' && <><select name="cat">{SLOTS.map(([k, n]) => <option key={k} value={k}>{n}</option>)}</select><input type="file" name="file" accept="image/*" /><small>The latest photo is used. Delete the old one afterwards.</small></>}
             <div><button className="btn" disabled={busy}>{busy ? 'Uploading...' : 'Add'}</button></div>

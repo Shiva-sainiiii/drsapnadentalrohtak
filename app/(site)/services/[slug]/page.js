@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { SITE, SERVICES } from '@/lib/site';
+import { SITE, SERVICES, SIMG } from '@/lib/site';
 import Icon from '@/components/Icon';
 
 export const dynamicParams = false;
@@ -27,6 +27,7 @@ export default async function Service({ params }) {
       <p className="crumb"><Link href="/">Home</Link> / <Link href="/#services">Treatments</Link> / {s.name}</p>
       <h1>{s.h}</h1>
       <p className="lead">{s.short}</p>
+      {SIMG[s.slug] && <div className="im sv-img"><img src={SIMG[s.slug]} alt={`${s.h}: a case treated at ${SITE.short}`} width="1100" height="544" /></div>}
       <p>{s.body}</p>
       <ul className="pl">{s.pts.map((p) => <li key={p}><Icon n="ck" />{p}</li>)}</ul>
       <div className="cta"><Link href="/#contact" className="btn">Book appointment <Icon n="ar" /></Link><a href={`tel:${SITE.tel}`} className="btn o"><Icon n="ph" />{SITE.phone}</a></div>
