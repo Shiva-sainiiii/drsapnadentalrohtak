@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { isAdmin } from '@/lib/auth';
 import { sb } from '@/lib/db';
 const no = () => Response.json({ error: 'Unauthorized' }, { status: 401 });
@@ -10,4 +11,11 @@ export async function DELETE(req) {
   const id = new URL(req.url).searchParams.get('id') || '';
   if (!/^[0-9a-f-]{36}$/.test(id)) return Response.json({ error: 'Invalid id' }, { status: 400 });
   try { await sb(`feedback?id=eq.${id}`, { method: 'DELETE' }); return Response.json({ ok: true }); } catch (e) { return Response.json({ error: String(e.message).slice(0, 300) }, { status: 500 }); }
+}
+export async function PATCH(req) {
+  if (!(await isAdmin())) return no();
+  let b;
+  try { b = await req.json(); } catch { return Response.json({ error: 'Invalid data' }, { status: 400 }); }
+  if (!/^[0-9a-f-]{36}$/.test(b.id || '')) return Response.json({ error: 'Invalid id' }, { status: 400 });
+  try { await sb(`feedback?id=eq.${b.id}`, { method: 'PATCH', body: { approved: !!b.approved } }); revalidatePath('/', 'layout'); return Response.json({ ok: true }); } catch (e) { return Response.json({ error: String(e.message).slice(0, 300) }, { status: 500 }); }
 }

@@ -63,6 +63,7 @@ export default function Admin() {
   const upd = async (id, patch) => { try { await api('/api/admin/media', { method: 'PATCH', body: JSON.stringify({ id, ...patch }) }); setRows((r) => r.map((x) => (x.id === id ? { ...x, ...patch } : x))); } catch (e) { setMsg(e.message); } };
   const del = async (id) => { if (!confirm('Delete this permanently?')) return; try { await api('/api/admin/media?id=' + id, { method: 'DELETE' }); setRows((r) => r.filter((x) => x.id !== id)); } catch (e) { setMsg(e.message); } };
   const delFb = async (id) => { if (!confirm('Delete this feedback?')) return; try { await api('/api/admin/feedback?id=' + id, { method: 'DELETE' }); setFb((r) => r.filter((x) => x.id !== id)); } catch (e) { setMsg(e.message); } };
+  const togFb = async (x) => { try { await api('/api/admin/feedback', { method: 'PATCH', body: JSON.stringify({ id: x.id, approved: !x.approved }) }); setFb((r) => r.map((y) => (y.id === x.id ? { ...y, approved: !x.approved } : y))); } catch (e) { setMsg(e.message); } };
   const check = async () => { setHealth(null); try { setHealth(await api('/api/admin/health')); } catch (e) { setMsg(e.message); } };
   const out = async () => { await api('/api/admin/login', { method: 'DELETE' }); setOk(false); };
 
@@ -82,7 +83,7 @@ export default function Admin() {
       {msg && <div className="msg" style={{ marginBottom: 16 }}>{msg}</div>}
       {tab === 'feedback' ? (<>
         <div className="box"><h3>Database check</h3><p>If feedback is not saving, run this. It tests the Supabase key, the tables and a test insert.</p><div><button className="btn sm" onClick={check}>Run check</button></div>{health && <pre style={{ whiteSpace: 'pre-wrap', fontSize: '.8rem' }}>{JSON.stringify(health, null, 2)}</pre>}</div>
-        {fb.length ? fb.map((x) => <div className="row" key={x.id} style={{ gridTemplateColumns: '1fr auto' }}><div><b>{x.name}</b> {'★'.repeat(x.rating)}<br />{x.comment || <i>No comment</i>}<br /><small>{new Date(x.created_at).toLocaleString()}</small></div><button className="btn sm dng" onClick={() => delFb(x.id)}>Delete</button></div>) : <p>No feedback yet.</p>}</>
+        {fb.length ? fb.map((x) => <div className="row" key={x.id} style={{ gridTemplateColumns: '1fr auto' }}><div><b>{x.name}</b> {'★'.repeat(x.rating)}{x.approved ? <span style={{ color: '#0a7d5a', fontWeight: 600 }}> · Live on website</span> : null}<br />{x.comment || <i>No comment</i>}<br /><small>{new Date(x.created_at).toLocaleString()}</small></div><div style={{ display: 'flex', gap: 8, alignItems: 'start' }}><button className="btn sm" onClick={() => togFb(x)}>{x.approved ? 'Hide from website' : 'Show on website'}</button><button className="btn sm dng" onClick={() => delFb(x.id)}>Delete</button></div></div>) : <p>No feedback yet.</p>}</>
       ) : (
         <>
           <form className="box" onSubmit={add}>

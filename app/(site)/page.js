@@ -15,10 +15,12 @@ export const revalidate = 60;
 const TILES = [['full-mouth-rehabilitation-rohtak', 's2', '/images/ba/ba1-after.jpg'], ['root-canal-treatment-rohtak', '', '/images/gallery/g2.jpg'], ['gum-treatment-rohtak', '', '/images/gallery/g3.jpg'], ['childrens-dentist-rohtak', '', '/images/gallery/g5.jpg'], ['smile-makeover-rohtak', 's2', '/images/ba/ba5-after.jpg'], ['dental-implants-rohtak', '', '/images/gallery/g1.jpg']];
 const MQ = ['Advanced Microscopic Dental Care', 'Microscope-assisted precision', 'Pain-free comfort', 'Periodontist and implantologist', 'Air polishing', 'Women-owned and LGBTQ+ friendly'];
 const USP = [['sh', 'Microscope-assisted precision', 'Clear structural detail for every procedure.'], ['sm', 'Pain-free approach', 'A light-handed technique designed for comfort.'], ['tooth', 'Expert-led care', 'Overseen by a certified Periodontist and Oral Implantologist.'], ['sp', 'Welcoming to everyone', 'Women-owned and LGBTQ+ friendly.']];
-const Stars = () => <span className="sr">{[1, 2, 3, 4, 5].map((i) => <Icon key={i} n="st" />)}</span>;
+const Stars = ({ n = 5 }) => <span className="sr">{[1, 2, 3, 4, 5].map((i) => <Icon key={i} n="st" c={i <= n ? '' : 'e'} />)}</span>;
 
 export default async function Home() {
   const d = await getData();
+  // Pehle approved patient feedback, phir default reviews, kul max 6 cards
+  const reviews = [...d.reviews.map((r) => ({ k: r.id, t: r.comment, n: String(r.name || '').trim(), s: Math.min(5, Math.max(1, +r.rating || 5)) })), ...REVIEWS.map((t) => ({ k: t, t, n: '', s: 5 }))].slice(0, 6);
   const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
   const mapQ = encodeURIComponent(SITE.map);
   return (
@@ -123,7 +125,7 @@ export default async function Home() {
 
       <section id="reviews" className="sec w" style={{ paddingTop: 0 }}>
         <h2 className="r">Patients notice the difference.</h2>
-        <div id="rl">{REVIEWS.map((t) => <div key={t} className="rc"><Stars /><p className="sf">{t}</p><small>Patient review</small></div>)}</div>
+        <div id="rl">{reviews.map((r) => <div key={r.k} className="rc"><Stars n={r.s} /><p className="sf">{r.t}</p><small>{r.n ? `${r.n} · Patient review` : 'Patient review'}</small></div>)}</div>
         <div className="dkp r"><div><h2>How was your visit?</h2><p>Tap a star and tell us about it. It takes ten seconds.</p></div><div><FeedbackForm /></div></div>
       </section>
 
