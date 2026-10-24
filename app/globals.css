@@ -160,3 +160,17 @@ footer .fe a{text-decoration:underline;text-underline-offset:3px}footer .fe a:ho
 
 /* hero heading ab lamba hai (Dr. Sapna's add hua) - laptop pe thoda chhota; mobile size same */
 .hero h1{font-size:clamp(2.4rem,4.8vw,3.9rem)}
+
+/* ===== v4: SEO footer (NAP + map + areas), areas chips ===== */
+footer .w{display:block}
+.ftg{display:grid;grid-template-columns:1.1fr 1fr 1.15fr;gap:clamp(28px,4vw,56px);align-items:start}
+.fta{font-style:normal;display:grid;gap:8px;margin:18px 0 20px}.fta p{max-width:34ch}
+footer .fth{font-family:var(--fd,serif);font-size:1.05rem;line-height:1.3;color:#fff;margin:0 0 12px;letter-spacing:0}
+.ftl{list-style:none;padding:0;margin:0;columns:2;column-gap:22px}.ftl li{break-inside:avoid;margin-bottom:7px}
+footer a:hover{color:#fff}
+.ftm{display:block;width:100%;height:230px;border:0;border-radius:26px;background:var(--s1);margin-bottom:12px}
+.ftd{text-decoration:underline;text-underline-offset:3px}
+footer .ftg+.fe{margin-top:38px}
+.ar2{list-style:none;padding:0}.ar2 li{padding:10px 18px;border:1px solid var(--ln);border-radius:99px;background:var(--sf);color:var(--tx);font-size:.9rem}
+@media(max-width:900px){.ftg{grid-template-columns:1fr}}
+@media(max-width:420px){.ftl{columns:1}}

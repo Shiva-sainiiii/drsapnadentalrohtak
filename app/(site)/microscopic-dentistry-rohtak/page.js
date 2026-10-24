@@ -1,21 +1,23 @@
 import Link from 'next/link';
-import { SITE, SERVICES, MICRO } from '@/lib/site';
+import { SITE, SERVICES, MICRO, og } from '@/lib/site';
 import Icon from '@/components/Icon';
 import Logo from '@/components/Logo';
 import LensView from '@/components/LensView';
 
 const path = '/microscopic-dentistry-rohtak';
+const description = `Dental microscope treatment in Rohtak for root canals, gum surgery, fillings and implants. Dr. Sapna's, Sector 2. Call ${SITE.phone}.`;
 export const metadata = {
-  title: 'Microscopic Dentistry in Rohtak | Dental Microscope Treatment',
-  description: `${MICRO.short} ${SITE.name}, Sector 2, Rohtak. Call ${SITE.phone}.`.slice(0, 160),
+  title: 'Microscopic Dentistry in Rohtak',
+  description,
   alternates: { canonical: path },
-  openGraph: { title: MICRO.h, description: MICRO.short, url: path, type: 'website' },
+  openGraph: og(`Microscopic Dentistry in Rohtak | ${SITE.short}`, description, path),
 };
 export default function Micro() {
   const url = SITE.url + path;
   const ld = [
     { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: MICRO.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
     { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [[SITE.url, 'Home'], [url, 'Microscopic dentistry']].map(([item, name], i) => ({ '@type': 'ListItem', position: i + 1, name, item })) },
+    { '@context': 'https://schema.org', '@type': 'WebPage', '@id': `${url}#webpage`, url, name: MICRO.h, inLanguage: 'en-IN', isPartOf: { '@id': `${SITE.url}/#website` }, about: { '@id': `${SITE.url}/#clinic` }, speakable: { '@type': 'SpeakableSpecification', cssSelector: ['h1', '.lead'] } },
   ];
   return (
     <main className="w sv">
@@ -31,7 +33,7 @@ export default function Micro() {
       {MICRO.blocks.map(([h, t]) => <div key={h} style={{ marginTop: 40, maxWidth: 760 }}><h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)' }}>{h}</h2><p style={{ marginTop: 10 }}>{t}</p></div>)}
       <div className="chips">{SERVICES.map((s) => <Link key={s.slug} href={`/services/${s.slug}`}>{s.name}</Link>)}</div>
       <div className="cta" style={{ marginTop: 34 }}><Link href="/#contact" className="btn">Book appointment <Icon n="ar" /></Link><a href={`tel:${SITE.tel}`} className="btn o"><Icon n="ph" />{SITE.phone}</a></div>
-      <h2 style={{ marginTop: 70, fontSize: 'clamp(1.6rem,3vw,2.2rem)' }}>Common questions</h2>
+      <h2 style={{ marginTop: 70, fontSize: 'clamp(1.6rem,3vw,2.2rem)' }}>Microscopic dentistry in Rohtak: common questions</h2>
       <div style={{ marginTop: 22, maxWidth: 760, marginBottom: 90 }}>{MICRO.faq.map(([q, a]) => <details key={q} open><summary>{q}</summary><p>{a}</p></details>)}</div>
     </main>
   );

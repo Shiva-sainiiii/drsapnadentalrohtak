@@ -10,7 +10,7 @@ function Row({ items, rev, t, onOpen }) {
         const v = x.kind === 'video';
         return (
           <button key={i} className="gc" onClick={() => onOpen(x)} aria-label={`Open ${v ? 'video' : 'photo'}: ${x.title || 'clinic'}`} aria-hidden={i >= base.length ? 'true' : undefined} tabIndex={i >= base.length ? -1 : undefined}>
-            <img src={v ? vthumb(x.url) : cld(x.url, 500)} alt={i >= base.length ? '' : x.title || 'Clinic photo'} loading="lazy" />
+            <img src={v ? vthumb(x.url) : cld(x.url, 500)} alt={i >= base.length ? '' : x.title || "Inside Dr. Sapna's dental clinic, Rohtak"} loading="lazy" />
             {v && <span className="pl"><svg className="i" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg></span>}
             {x.title && <span className="cap">{x.title}</span>}
           </button>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { SITE, SERVICES, FAQS, REVIEWS, ABOUT, MICRO } from '@/lib/site';
+import Image from 'next/image';
+import { SITE, SERVICES, FAQS, REVIEWS, ABOUT, MICRO, AREAS, META, og } from '@/lib/site';
 import { getData } from '@/lib/data';
 import { cld } from '@/lib/img';
 import Icon from '@/components/Icon';
@@ -12,6 +13,7 @@ import Tour from '@/components/Tour';
 import { FeedbackForm, ContactForm } from '@/components/Forms';
 
 export const revalidate = 60;
+export const metadata = { title: { absolute: META.title }, description: META.description, alternates: { canonical: '/' }, openGraph: og(META.title, META.description, '/') };
 const TILES = [['full-mouth-rehabilitation-rohtak', 's2', '/images/ba/ba1-after.jpg'], ['root-canal-treatment-rohtak', '', '/images/gallery/g2.jpg'], ['gum-treatment-rohtak', '', '/images/gallery/g3.jpg'], ['childrens-dentist-rohtak', '', '/images/gallery/g5.jpg'], ['smile-makeover-rohtak', 's2', '/images/ba/ba5-after.jpg'], ['dental-implants-rohtak', '', '/images/gallery/g1.jpg']];
 const MQ = ['Advanced Microscopic Dental Care', 'Microscope-assisted precision', 'Pain-free comfort', 'Periodontist and implantologist', 'Air polishing', 'Women-owned and LGBTQ+ friendly'];
 const USP = [['sh', 'Microscope-assisted precision', 'Clear structural detail for every procedure.'], ['sm', 'Pain-free approach', 'A light-handed technique designed for comfort.'], ['tooth', 'Expert-led care', 'Overseen by a certified Periodontist and Oral Implantologist.'], ['sp', 'Welcoming to everyone', 'Women-owned and LGBTQ+ friendly.']];
@@ -23,15 +25,16 @@ export default async function Home() {
   const all = [...d.reviews.map((r) => ({ k: r.id, t: r.comment, n: String(r.name || '').trim(), s: Math.min(5, Math.max(1, +r.rating || 5)) })), ...REVIEWS.map((t) => ({ k: t, t, n: '', s: 5 }))];
   const reviews = all.slice(0, 5), more = all.length > 5; // home pe sirf 5, baaki /reviews page pe
   const faq = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
+  const web = { '@context': 'https://schema.org', '@type': 'WebPage', '@id': `${SITE.url}/#webpage`, url: SITE.url, name: META.title, inLanguage: 'en-IN', isPartOf: { '@id': `${SITE.url}/#website` }, about: { '@id': `${SITE.url}/#clinic` }, speakable: { '@type': 'SpeakableSpecification', cssSelector: ['h1', '.lead'] } };
   const mapQ = encodeURIComponent(SITE.map);
   return (
     <main>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faq) }} />
+      {[faq, web].map((x, i) => <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(x) }} />)}
       <section id="top" className="w hero">
         <div>
           <div className="tag r"><Logo />Rohtak&apos;s microscope-assisted dental clinic</div>
           <h1>{[["Dr. Sapna's", 0], ['Advanced', 1], ['Microscopic', 1], ['Dental', 0], ['Care', 0], ['in Rohtak.', 0]].map(([w, h], i) => <span key={w}><span className={'fx' + (h ? ' hm' : '')} style={{ '--d': i }}>{w}</span>{' '}</span>)}</h1>
-          <p className="lead r" style={{ '--i': 2 }}>Precision redefined. Pain-free dentistry. Gentle, meticulous care by Dr. Sapna Sharma, Periodontist and Oral Implantologist, using a high-magnification dental microscope.</p>
+          <p className="lead r" style={{ '--i': 2 }}>Precision redefined. Pain-free dentistry in Rohtak. Gentle, meticulous care by Dr. Sapna Sharma, Periodontist and Oral Implantologist, using a high-magnification dental microscope.</p>
           <div className="cta r" style={{ '--i': 3 }}>
             <Link href="/#contact" className="btn">Book appointment <Icon n="ar" /></Link>
             <a href={`tel:${SITE.tel}`} className="btn o"><Icon n="ph" />{SITE.phone}</a>
@@ -68,7 +71,7 @@ export default async function Home() {
         <p className="r" style={{ marginTop: 14, maxWidth: '60ch' }}>Every treatment is planned and carried out with microscope-level care. Tap a treatment to learn more.</p>
         <div className="bn">{TILES.map(([slug, cls, img], i) => { const s = SERVICES.find((x) => x.slug === slug); return (
           <Link key={slug} href={`/services/${slug}`} className={`tl ph ${cls} r`} style={{ '--i': i % 3 }}>
-            <img src={img} alt={`${s.name} at ${SITE.short}, Rohtak`} loading="lazy" />
+            <Image src={img} alt={`${s.name} at ${SITE.short}, Rohtak`} fill sizes={cls ? '(max-width:1020px) 100vw, 50vw' : '(max-width:520px) 100vw, (max-width:1020px) 50vw, 25vw'} />
             <span className="shade" />
             <div className="pc"><span className="ic"><Icon n={s.icon} /></span><h3>{s.name}</h3><p>{s.short}</p><span className="go">Learn more <Icon n="ar" /></span></div>
           </Link>
@@ -87,7 +90,7 @@ export default async function Home() {
       </div></section>
 
       <section id="doctors" className="sec w" style={{ paddingTop: 0 }}>
-        <h2 className="r">Meet the doctors</h2>
+        <h2 className="r">Meet the dentists at our Rohtak clinic</h2>
         <div className="dg">{d.doctors.map((x, i) => (
           <div key={x.slug} className="r" style={{ '--i': i }}>
             <div className="im"><img src={cld(x.img, 500)} alt={`${x.name}, ${x.role}`} width="500" height="500" loading="lazy" /></div>
@@ -97,7 +100,7 @@ export default async function Home() {
       </section>
 
       <section id="results" className="sec w" style={{ paddingTop: 0 }}>
-        <div className="hd2 r"><div><h2>Real smiles, real results.</h2><p>Drag the slider to compare before and after.</p></div></div>
+        <div className="hd2 r"><div><h2>Real smiles, real results in Rohtak.</h2><p>Drag the slider to compare before and after.</p></div></div>
         <div className="baw">
           <BeforeAfter items={d.ba} />
           <p className="note">Results vary from patient to patient. Treatment suitability is decided after examination.</p>
@@ -110,7 +113,7 @@ export default async function Home() {
       </section>
 
       <section id="gallery" className="sec" style={{ paddingTop: 0 }}>
-        <div className="w hd2 r"><div><h2>Inside the clinic</h2><p>Microscope-assisted treatment, up close. Hover to pause, tap to enlarge.</p></div></div>
+        <div className="w hd2 r"><div><h2>Inside our dental clinic in Rohtak</h2><p>Microscope-assisted treatment, up close. Hover to pause, tap to enlarge.</p></div></div>
         <Gallery items={d.gallery} />
       </section>
 
@@ -127,7 +130,7 @@ export default async function Home() {
       </div></section>
 
       <section id="reviews" className="sec w" style={{ paddingTop: 0 }}>
-        <h2 className="r">Patients notice the difference.</h2>
+        <h2 className="r">Rohtak patients notice the difference.</h2>
         <div id="rl">
           {reviews.map((r) => <div key={r.k} className="rc"><Stars n={r.s} /><p className="sf">{r.t}</p><small>{r.n ? `${r.n} · Patient review` : 'Patient review'}</small></div>)}
           {more && <div className="rc rm"><h3>More patient stories</h3><p>Read every review shared by our patients.</p><Link className="btn" href="/reviews">View all reviews <Icon n="ar" /></Link></div>}
@@ -136,8 +139,14 @@ export default async function Home() {
         <div className="dkp r"><div><h2>How was your visit?</h2><p>Tap a star and tell us about it. It takes ten seconds.</p></div><div><FeedbackForm /></div></div>
       </section>
 
+      <section id="areas" className="sec w" style={{ paddingTop: 0 }}>
+        <h2 className="r">Areas we serve in Rohtak</h2>
+        <p className="r" style={{ marginTop: 14, maxWidth: '62ch' }}>Our clinic is on Main Market Road, Sector 2, Rohtak. Patients visit us from Model Town, DLF Colony, Subhash Nagar and many other parts of the city.</p>
+        <ul className="chips ar2 r">{AREAS.map((a) => <li key={a}>{a}</li>)}</ul>
+      </section>
+
       <section id="contact" className="w"><div className="cpn r">
-        <div><h2>Book your visit</h2><p style={{ marginTop: 14 }}>Appointments are recommended. Send a request and we will confirm your slot.</p>
+        <div><h2>Book your visit in Rohtak</h2><p style={{ marginTop: 14 }}>Appointments are recommended. Send a request and we will confirm your slot.</p>
           <div className="ci">
             <a href={`tel:${SITE.tel}`}><Icon n="ph" /><span><b>Call us</b>{SITE.phone}</span></a>
             <a href={`https://wa.me/${SITE.wa}`} target="_blank" rel="noopener"><Icon n="wa" /><span><b>WhatsApp</b>Chat with the clinic</span></a>
