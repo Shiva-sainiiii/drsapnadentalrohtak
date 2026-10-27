@@ -5,7 +5,7 @@ import { SITE } from '@/lib/site';
 import Icon from './Icon';
 import Logo from './Logo';
 const TH = [['teal', 'Teal', '#0e7c7b'], ['ocean', 'Ocean', '#1d4ed8'], ['rose', 'Rose', '#be185d'], ['dark', 'Midnight', '#0b1f24']];
-const NAV = [['Microscope', '/#microscope'], ['Treatments', '/#services'], ['Doctors', '/#doctors'], ['Results', '/#results'], ['Videos', '/#videos'], ['Reviews', '/#reviews']];
+const NAV = [['Microscope', '/#microscope'], ['Treatments', '/#services'], ['About', '/about'], ['Doctors', '/#doctors'], ['Results', '/#results'], ['Videos', '/#videos'], ['Reviews', '/#reviews']];
 export default function Header() {
   const [o, setO] = useState(false), [t, setT] = useState(false), [th, setTh] = useState('teal');
   useEffect(() => { setTh(document.documentElement.dataset.theme || 'teal'); }, []);

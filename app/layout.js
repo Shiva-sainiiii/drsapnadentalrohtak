@@ -21,7 +21,7 @@ const clinic = {
   hasMap: `https://www.google.com/maps?q=${encodeURIComponent(SITE.map)}`,
   openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: SITE.days, opens: SITE.opens, closes: SITE.closes }],
   areaServed: [{ '@type': 'City', name: SITE.city }, ...AREAS.map((a) => ({ '@type': 'Place', name: `${a}, ${SITE.city}` }))], sameAs: [SITE.yt, SITE.ig, SITE.fb, SITE.gbp],
-  founder: { '@type': 'Person', name: 'Dr. Sapna Sharma', jobTitle: 'Periodontist and Oral Implantologist', alumniOf: ['MMCDSR', 'NIMS University'], memberOf: ['Indian Society of Periodontology', 'Indian Dental Association'] },
+  founder: { '@type': 'Person', '@id': `${SITE.url}/#dr-sapna-sharma`, name: 'Dr. Sapna Sharma', jobTitle: 'Periodontist and Oral Implantologist', url: `${SITE.url}/about`, alumniOf: ['MMCDSR', 'NIMS University'], memberOf: ['Indian Society of Periodontology', 'Indian Dental Association'] },
   employee: [{ '@type': 'Person', name: 'Dr. Aarushi Vij' }],
   hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Dental treatments', itemListElement: SERVICES.map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.name, url: `${SITE.url}/services/${s.slug}` } })) },
 };

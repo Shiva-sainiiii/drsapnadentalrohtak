@@ -1,4 +1,4 @@
-import { SITE, SERVICES, AREAS, MICRO } from '@/lib/site';
+import { SITE, SERVICES, AREAS, MICRO, FAQS } from '@/lib/site';
 export const dynamic = 'force-static';
 // /llms.txt: AI assistants (ChatGPT, Perplexity, Claude, Gemini) ke liye clinic ka short, sahi summary. NAP SITE se hi aata hai
 export function GET() {
@@ -19,13 +19,13 @@ export function GET() {
 
 ## Main pages
 - [Home](${SITE.url}): Overview, doctors, results, videos, FAQs and contact
-- [Microscopic dentistry in Rohtak](${SITE.url}/microscopic-dentistry-rohtak): How treatment under a dental microscope works
+- [About Dr. Sapna Sharma](${SITE.url}/about): Qualifications, memberships, team and clinic details\n- [Microscopic dentistry in Rohtak](${SITE.url}/microscopic-dentistry-rohtak): How treatment under a dental microscope works
 - [Patient reviews](${SITE.url}/reviews): Reviews shared by patients
 
 ## Treatments in Rohtak
 ${SERVICES.map((s) => `- [${s.name}](${SITE.url}/services/${s.slug}): ${s.short}`).join('\n')}
 
-## Find and contact us
+## Common questions\n${FAQS.slice(0, 5).map(([q, a]) => `- ${q} ${a}`).join('\n')}\n\n## Find and contact us
 - Google Maps: https://www.google.com/maps?q=${encodeURIComponent(SITE.map)}
 - YouTube: ${SITE.yt}
 - Instagram: ${SITE.ig}
