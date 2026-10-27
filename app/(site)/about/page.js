@@ -10,10 +10,11 @@ export const metadata = { title: 'About Dr. Sapna Sharma, Periodontist in Rohtak
 
 // ENTITY CONTENT: sirf wahi facts jo site.js / clinic ne confirm kiye hain. [TODO] wali cheezein Dr. Sapna se poochkar hi add karo, andaza mat lagao
 const FACTS = [
-  ['Who is Dr. Sapna Sharma?', `Dr. Sapna Sharma is a Periodontist and Oral Implantologist in Rohtak, Haryana. She holds a BDS from MMCDSR and an MDS in Periodontics and Oral Implantology from NIMS University, and she founded ${SITE.name} in Sector 2, Rohtak.`],
+  ['Who is Dr. Sapna Sharma?', `Dr. Sapna Sharma is a Periodontist and Oral Implantologist in Rohtak, Haryana. She holds a BDS from MMCDSR and an MDS in Periodontics and Oral Implantology from NIMS University, and she founded ${SITE.name} in Sector 2, Rohtak, which opened in September 2021.`],
   ['What is she known for in Rohtak?', 'Dr. Sapna is known for microscope-assisted dental treatment, including root canals and retreatment (Re-RCT), gum surgery and implants. She works with a high-magnification dental microscope and a gentle, comfort-focused technique.'],
   ['What training and memberships does she have?', 'She is certified in Smile Designing and Full Mouth Rehabilitation (Pune), is a member of the Indian Society of Periodontology and the Indian Dental Association, and has over 10 national and international publications in reputed journals.'],
   ['Where is the clinic and when is it open?', `${SITE.name} is at ${SITE.addr}. It is open ${SITE.hours}. Call or WhatsApp ${SITE.phone} to book.`],
+  ['When did the clinic open?', `${SITE.name} opened on 19 September 2021 in Sector 2, Rohtak.`],
   ['What languages does the clinic speak?', 'English and Hindi.'],
   ['Who else is in the clinical team?', 'Dr. Aarushi Vij, Dentist, is part of the clinical team.'],
 ];
@@ -55,7 +56,7 @@ export default function About() {
         <li><Icon n="ck" />Member, Indian Society of Periodontology and Indian Dental Association</li>
         <li><Icon n="ck" />Over 10 national and international publications in reputed journals</li>
       </ul>
-      {/* [TODO Dr. Sapna se lo: registration number (State Dental Council), clinic kab shuru hui, publications ke naam/links, conference list. Inse E-E-A-T sabse zyada badhta hai] */}
+      {/* [TODO Dr. Sapna se lo: registration number (State Dental Council), publications ke naam/links, conference list. Inse E-E-A-T sabse zyada badhta hai] */}
 
       <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', marginTop: 40 }}>How she treats patients</h2>
       <p style={{ marginTop: 10, maxWidth: 760 }}>Dr. Sapna practises gentle, comprehensive dentistry with personalised treatment plans. She listens first, explains your options before starting, and prefers conservative treatment that keeps your natural tooth wherever that is suitable. Cost and suitability are decided only after examination.</p>

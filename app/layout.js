@@ -15,7 +15,7 @@ export const metadata = {
 // Ek hi NAP (SITE) se: Dentist + LocalBusiness + WebSite. Baaki pages isi ko @id se refer karte hain
 const clinic = {
   '@type': ['Dentist', 'LocalBusiness'], '@id': `${SITE.url}/#clinic`,
-  name: SITE.name, alternateName: SITE.alt, url: SITE.url, image: `${SITE.url}/images/og.jpg`, telephone: SITE.tel, email: SITE.email, medicalSpecialty: 'Dentistry', knowsLanguage: ['en-IN', 'hi-IN'],
+  name: SITE.name, alternateName: SITE.alt, url: SITE.url, image: `${SITE.url}/images/og.jpg`, telephone: SITE.tel, email: SITE.email, medicalSpecialty: 'Dentistry', knowsLanguage: ['en-IN', 'hi-IN'], foundingDate: SITE.opened,
   address: { '@type': 'PostalAddress', streetAddress: SITE.street, addressLocality: SITE.city, addressRegion: SITE.region, postalCode: SITE.zip, addressCountry: 'IN' },
   ...(SITE.geo && { geo: { '@type': 'GeoCoordinates', latitude: SITE.geo.lat, longitude: SITE.geo.lng } }),
   hasMap: `https://www.google.com/maps?q=${encodeURIComponent(SITE.map)}`,
