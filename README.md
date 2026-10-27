@@ -23,7 +23,7 @@ Next.js 16 (App Router) website with admin panel, Gemini chatbot, local SEO page
 
 ## Admin panel: `/admin`
 
-Password se login. Tabs: **Before / After**, **Gallery** (photos + videos), **YouTube** (link paste karo, Short ka checkbox), **Doctors** (photo badalna), **Site images** (hero / about photo), **Feedback** (patients ke bheje reviews).
+Password se login. Tabs: **Before / After**, **Gallery** (photos + videos), **YouTube** (link paste karo, Short ka checkbox), **Doctors** (photo badalna), **Site images** (hero main, hero small 1/2/3, about photo), **Conferences**, **Feedback** (patients ke bheje reviews).
 Add, title edit, order number, Show/Hide aur Delete sab hota hai. Delete karne par Cloudinary se file bhi hat jati hai. Changes site pe ~1 minute mein dikhte hain.
 Files seedha browser se Cloudinary pe upload hoti hain (video bade ho sakte hain), Supabase mein sirf list/details save hoti hain.
 
@@ -53,3 +53,13 @@ Files seedha browser se Cloudinary pe upload hoti hain (video bade ho sakte hain
 1. Clinic ke 3-5 hisse 360 photo mein shoot karo (reception, waiting area, microscope wala treatment room, sterilisation). 360 camera ya phone ka Google Street View app (photo sphere) chalega. Photo **2:1 ratio (equirectangular)** honi chahiye.
 2. `/admin` > **360 Tour** > har photo ka naam daal ke upload karo. Site pe "Take a 360 tour" section apne aap aa jata hai (jab tak koi photo nahi hai, section hidden rehta hai). Viewer drag/pinch se chalta hai, fullscreen bhi hai.
 3. Alternative: Google ka indoor Street View banwa lo aur uska embed URL `lib/site.js` ke `tourEmbed` mein paste kar do. Tab ye iframe dikhega.
+
+## Conferences section
+
+1. **Ek baar** Supabase SQL Editor mein `supabase-update-v4.sql` run karo (naya type `conference` allow karta hai). Naye project par `supabase.sql` mein ye already hai.
+2. `/admin` > **Conferences** > conference ka naam, place/date daalo, photos upload karo (kai ek saath ho sakti hain). Naam, place/date, order, Show/Hide, Delete sab baad mein edit ho sakta hai.
+3. Jab tak koi photo nahi hai, home page par ye section hidden rehta hai. Pehli photo ke baad "Always learning, always improving." section Doctors ke baad dikhne lagta hai.
+
+## Hero small photos
+
+`/admin` > **Site images** > "Hero small photo 1 / 2 / 3" chuno aur photo upload karo. Jo slot khali hai uski default photo dikhti hai.

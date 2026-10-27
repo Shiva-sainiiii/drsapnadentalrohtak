@@ -10,6 +10,7 @@ import YouTubeGrid from '@/components/YouTubeGrid';
 import Logo from '@/components/Logo';
 import LensView from '@/components/LensView';
 import Tour from '@/components/Tour';
+import Conferences from '@/components/Conferences';
 import { FeedbackForm, ContactForm } from '@/components/Forms';
 
 export const revalidate = 60;
@@ -48,7 +49,7 @@ export default async function Home() {
             <path d="M200 14v30M200 356v30M14 200h30M356 200h30" stroke="var(--ac)" strokeWidth="2.5" strokeLinecap="round" />
           </svg>
           <div className="im lc"><img src={cld(d.hero, 800)} alt="Dr. Sapna Sharma working under a dental microscope in Rohtak" width="640" height="640" fetchPriority="high" /></div>
-          <div className="im ls"><img src={cld(d.heroSmall, 400)} alt="Dr. Sapna Sharma, Periodontist and Oral Implantologist" width="400" height="400" loading="lazy" /></div>
+          <div className="lsg">{d.heroSmall.map((src, i) => <div key={i} className={`im ls ls${i + 1}`}><img src={cld(src, 400)} alt={i === 0 ? 'Dr. Sapna Sharma, Periodontist and Oral Implantologist' : "Dr. Sapna's microscopic dental clinic in Rohtak"} width="400" height="400" loading="lazy" /></div>)}</div>
           <div className="sk">Under the microscope<small>Every detail in focus</small></div>
         </div>
       </section>
@@ -98,6 +99,13 @@ export default async function Home() {
           </div>
         ))}</div>
       </section>
+
+      {d.conferences.length > 0 && (
+        <section id="conferences" className="sec w" style={{ paddingTop: 0 }}>
+          <div className="hd2 r"><div><h2>Always learning, always improving.</h2><p>Dr. Sapna keeps studying and regularly attends dental conferences and workshops, so your treatment in Rohtak stays up to date.</p></div></div>
+          <Conferences items={d.conferences} />
+        </section>
+      )}
 
       <section id="results" className="sec w" style={{ paddingTop: 0 }}>
         <div className="hd2 r"><div><h2>Real smiles, real results in Rohtak.</h2><p>Drag the slider to compare before and after.</p></div></div>

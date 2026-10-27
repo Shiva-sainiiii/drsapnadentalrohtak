@@ -5,7 +5,7 @@ import { destroy } from '@/lib/cloud';
 const no = () => Response.json({ error: 'Unauthorized' }, { status: 401 });
 const bad = (e) => Response.json({ error: String(e.message || e).slice(0, 300) }, { status: 500 });
 const done = () => revalidatePath('/', 'layout');
-const KINDS = ['gallery', 'video', 'ba', 'doctor', 'site', 'youtube', 'pano'], UUID = /^[0-9a-f-]{36}$/;
+const KINDS = ['gallery', 'video', 'ba', 'doctor', 'site', 'youtube', 'pano', 'conference'], UUID = /^[0-9a-f-]{36}$/;
 export async function GET() {
   if (!(await isAdmin())) return no();
   try { return Response.json(await sb('media?order=kind.asc,sort.asc,created_at.desc')); } catch (e) { return bad(e); }
@@ -30,7 +30,11 @@ export async function PATCH(req) {
     if ('title' in b) patch.title = String(b.title).slice(0, 120);
     if ('sort' in b) patch.sort = +b.sort || 0;
     if ('visible' in b) patch.visible = !!b.visible;
-    await sb(`media?id=eq.${b.id}`, { method: 'PATCH', body: patch });
+    // Conference ka subtitle (place / date) category column mein rehta hai. Doctor/site rows ka category slot-key hai, isliye sirf conference rows par allow.
+    if ('sub' in b) {
+      await sb(`media?id=eq.${b.id}&kind=eq.conference`, { method: 'PATCH', body: { category: String(b.sub).slice(0, 60) } });
+    }
+    if (Object.keys(patch).length) await sb(`media?id=eq.${b.id}`, { method: 'PATCH', body: patch });
     done();
     return Response.json({ ok: true });
   } catch (e) { return bad(e); }

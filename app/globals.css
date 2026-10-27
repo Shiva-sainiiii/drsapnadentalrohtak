@@ -174,3 +174,21 @@ footer .ftg+.fe{margin-top:38px}
 .ar2{list-style:none;padding:0}.ar2 li{padding:10px 18px;border:1px solid var(--ln);border-radius:99px;background:var(--sf);color:var(--tx);font-size:.9rem}
 @media(max-width:900px){.ftg{grid-template-columns:1fr}}
 @media(max-width:420px){.ftl{columns:1}}
+/* Hero: 3 small photos */
+.lsg .ls{position:absolute;left:auto;bottom:auto;width:auto;animation:fl2 6s ease-in-out infinite}
+@keyframes fl2{50%{transform:translateY(-8px)}}
+.lsg .ls1{left:-1%;bottom:4%;width:30%}
+.lsg .ls2{left:-5%;bottom:36%;width:20%;animation-delay:-2s}
+.lsg .ls3{left:24%;bottom:-5%;width:20%;animation-delay:-4s}
+.lsg .ls img{width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+/* Conferences */
+.cfg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:34px}
+.cfg.big .cf2:first-child{grid-column:span 2;grid-row:span 2}
+.cf2{position:relative;aspect-ratio:4/3;border:0;padding:0;border-radius:26px;overflow:hidden;cursor:zoom-in;background:var(--s1)}
+.cfg.big .cf2:first-child{aspect-ratio:auto}
+.cf2 img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ez)}.cf2:hover img{transform:scale(1.06)}
+.cc{position:absolute;left:0;right:0;bottom:0;display:grid;gap:2px;padding:44px 18px 16px;text-align:left;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.78))}
+.cc b{font:600 1rem/1.25 var(--fd)}.cc small{font-size:.78rem;opacity:.85}
+@media(max-width:900px){.cfg{grid-template-columns:1fr 1fr;gap:12px}.cfg.big .cf2:first-child{grid-column:span 2;grid-row:auto;aspect-ratio:4/3}.cf2{border-radius:20px}}
+@media(max-width:420px){.cfg{grid-template-columns:1fr}.cfg.big .cf2:first-child{grid-column:auto}}
+@media(min-width:901px){.cfg.big{grid-auto-rows:clamp(190px,17vw,240px)}.cfg.big .cf2{aspect-ratio:auto}}

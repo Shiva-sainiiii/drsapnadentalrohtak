@@ -1,9 +1,9 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
 
-const TABS = [['ba', 'Before / After'], ['gallery', 'Gallery'], ['youtube', 'YouTube'], ['doctor', 'Doctors'], ['site', 'Site images'], ['pano', '360 Tour'], ['feedback', 'Feedback']];
+const TABS = [['ba', 'Before / After'], ['gallery', 'Gallery'], ['youtube', 'YouTube'], ['doctor', 'Doctors'], ['site', 'Site images'], ['conference', 'Conferences'], ['pano', '360 Tour'], ['feedback', 'Feedback']];
 const DOCS = [['dr-sapna-sharma', 'Dr. Sapna Sharma'], ['dr-aarushi-vij', 'Dr. Aarushi Vij']];
-const SLOTS = [['hero-main', 'Hero main photo'], ['hero-small', 'Hero small photo'], ['about', 'About section photo'], ['lens', 'Microscope section photo']];
+const SLOTS = [['hero-main', 'Hero main photo'], ['hero-small', 'Hero small photo 1'], ['hero-small-2', 'Hero small photo 2'], ['hero-small-3', 'Hero small photo 3'], ['about', 'About section photo'], ['lens', 'Microscope section photo']];
 const ytId = (s) => (s.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/) || [])[1] || (/^[\w-]{11}$/.test(s.trim()) ? s.trim() : '');
 async function api(url, opt = {}) {
   const r = await fetch(url, { ...opt, headers: { 'Content-Type': 'application/json' } });
@@ -53,7 +53,7 @@ export default function Admin() {
         if (!files.length) throw new Error('Choose a file');
         for (const file of files) {
           const u = await upload(file);
-          await post({ kind: tab === 'gallery' ? (u.resource_type === 'video' ? 'video' : 'gallery') : tab, title: tab === 'gallery' || tab === 'pano' ? title : '', category: f.get('cat') || '', ...u });
+          await post({ kind: tab === 'gallery' ? (u.resource_type === 'video' ? 'video' : 'gallery') : tab, title: tab === 'gallery' || tab === 'pano' || tab === 'conference' ? title : '', category: f.get('cat') || '', ...u });
         }
       }
       form.reset(); await load(); setMsg('Saved. The website updates within a minute.');
@@ -91,6 +91,7 @@ export default function Admin() {
             {tab === 'ba' && <><input name="title" placeholder="Title, e.g. Smile makeover with crowns" /><label>Before photo<input type="file" name="before" accept="image/*" /></label><label>After photo<input type="file" name="after" accept="image/*" /></label></>}
             {tab === 'gallery' && <><input name="title" placeholder="Caption (optional)" /><label>Photos or videos (you can pick many)<input type="file" name="file" accept="image/*,video/*" multiple /></label></>}
             {tab === 'youtube' && <><input name="title" placeholder="Video title" /><input name="link" placeholder="YouTube link or video ID" /><label><input type="checkbox" name="short" style={{ width: 'auto' }} /> This is a YouTube Short</label></>}
+            {tab === 'conference' && <><input name="title" placeholder="Conference / workshop name, e.g. IDA National Conference" /><input name="cat" maxLength={60} placeholder="Place and date, e.g. New Delhi, March 2026 (optional)" /><label>Photos (you can pick many; same name is used for all, edit each below)<input type="file" name="file" accept="image/*" multiple /></label></>}
             {tab === 'pano' && <><input name="title" placeholder="Scene name, e.g. Reception" /><label>360 photo (equirectangular, 2:1 ratio)<input type="file" name="file" accept="image/*" /></label></>}
             {tab === 'doctor' && <><select name="cat">{DOCS.map(([k, n]) => <option key={k} value={k}>{n}</option>)}</select><input type="file" name="file" accept="image/*" /><small>The latest photo is used. Delete the old one afterwards.</small></>}
             {tab === 'site' && <><select name="cat">{SLOTS.map(([k, n]) => <option key={k} value={k}>{n}</option>)}</select><input type="file" name="file" accept="image/*" /><small>The latest photo is used. Delete the old one afterwards.</small></>}
@@ -99,7 +100,7 @@ export default function Admin() {
           {list.map((r) => (
             <div className="row" key={r.id}>
               {r.kind === 'youtube' ? <img src={`https://i.ytimg.com/vi/${r.url}/mqdefault.jpg`} alt="" /> : r.kind === 'video' ? <div className="th2">Video</div> : <img src={r.url.replace('/upload/', '/upload/w_240,f_auto,q_auto/')} alt="" />}
-              <div>{label(r) && <b>{label(r)}</b>}{r.kind === 'ba' && <small> (before/after)</small>}{r.category === 'short' && <small> (Short)</small>}<input defaultValue={r.title} placeholder="Title" onBlur={(e) => e.target.value !== r.title && upd(r.id, { title: e.target.value })} /></div>
+              <div>{label(r) && <b>{label(r)}</b>}{r.kind === 'ba' && <small> (before/after)</small>}{r.category === 'short' && <small> (Short)</small>}<input defaultValue={r.title} placeholder={r.kind === 'conference' ? 'Conference name' : 'Title'} onBlur={(e) => e.target.value !== r.title && upd(r.id, { title: e.target.value })} />{r.kind === 'conference' && <input style={{ marginTop: 6 }} defaultValue={r.category} maxLength={60} placeholder="Place and date" onBlur={(e) => e.target.value !== r.category && upd(r.id, { sub: e.target.value, category: e.target.value })} />}</div>
               <div className="acts"><label>Order <input type="number" defaultValue={r.sort} onBlur={(e) => +e.target.value !== r.sort && upd(r.id, { sort: +e.target.value })} /></label><label><input type="checkbox" style={{ width: 'auto' }} checked={r.visible} onChange={(e) => upd(r.id, { visible: e.target.checked })} /> Show</label><button className="btn sm dng" onClick={() => del(r.id)}>Delete</button></div>
             </div>
           ))}
