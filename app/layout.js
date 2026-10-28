@@ -1,5 +1,6 @@
 import './globals.css';
 import Sprite from '@/components/Sprite';
+import Track from '@/components/Track';
 import { SITE, SERVICES, AREAS, META, og } from '@/lib/site';
 
 export const viewport = { width: 'device-width', initialScale: 1, themeColor: '#f3f8f7' };
@@ -36,7 +37,7 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: "try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add('js')" }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       </head>
-      <body><Sprite />{children}</body>
+      <body><Sprite />{children}<Track /></body>
     </html>
   );
 }

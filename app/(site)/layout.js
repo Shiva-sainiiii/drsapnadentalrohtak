@@ -29,6 +29,8 @@ export default function SiteLayout({ children }) {
           <div>
             <h2 className="fth">Treatments in Rohtak</h2>
             <ul className="ftl">{SERVICES.map((s) => <li key={s.slug}><Link href={`/services/${s.slug}`}>{s.name}</Link></li>)}</ul>
+            <h2 className="fth" style={{ marginTop: 26 }}>The clinic</h2>
+            <ul className="ftl"><li><Link href="/about">About Dr. Sapna Sharma</Link></li><li><Link href="/reviews">Patient reviews</Link></li><li><Link href="/microscopic-dentistry-rohtak">Microscopic dentistry</Link></li></ul>
             <h2 className="fth" style={{ marginTop: 26 }}>Areas we serve</h2>
             <p>{AREAS.join(', ')} and nearby areas of Rohtak.</p>
           </div>

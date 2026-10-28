@@ -5,8 +5,8 @@ import Icon from '@/components/Icon';
 
 const path = '/about';
 const title = 'About Dr. Sapna Sharma, Periodontist in Rohtak';
-const description = `Dr. Sapna Sharma, BDS, MDS (Periodontics and Oral Implantology), leads ${SITE.name} in Sector 2, Rohtak. Qualifications, memberships and approach.`;
-export const metadata = { title: 'About Dr. Sapna Sharma, Periodontist in Rohtak', description, alternates: { canonical: path }, openGraph: og(`${title} | ${SITE.short}`, description, path) };
+const description = 'Dr. Sapna Sharma, BDS, MDS, is a Periodontist and Oral Implantologist in Sector 2, Rohtak. Qualifications, team, clinic hours and contact.';
+export const metadata = { title: { absolute: 'Dr. Sapna Sharma, Periodontist in Rohtak | About' }, description, alternates: { canonical: path }, openGraph: og(`${title} | ${SITE.short}`, description, path) };
 
 // ENTITY CONTENT: sirf wahi facts jo site.js / clinic ne confirm kiye hain. [TODO] wali cheezein Dr. Sapna se poochkar hi add karo, andaza mat lagao
 const FACTS = [

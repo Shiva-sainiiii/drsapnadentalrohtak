@@ -40,7 +40,7 @@ export default async function Home() {
             <Link href="/#contact" className="btn">Book appointment <Icon n="ar" /></Link>
             <a href={`tel:${SITE.tel}`} className="btn o"><Icon n="ph" />{SITE.phone}</a>
           </div>
-          <div className="rt r" style={{ '--i': 4 }}><Stars /><span><b>5.0</b> rating across the web</span></div>
+          <div className="rt r" style={{ '--i': 4 }}><Stars />{SITE.rating ? <span><b>{SITE.rating.value}</b> on Google ({SITE.rating.count} reviews)</span> : <Link href="/reviews">Read real patient reviews</Link>}</div>
         </div>
         <div className="lens r" style={{ '--i': 2 }}>
           <svg viewBox="0 0 400 400" aria-hidden="true">

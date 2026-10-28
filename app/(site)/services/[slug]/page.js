@@ -35,6 +35,7 @@ export default async function Service({ params }) {
       <p style={{ marginTop: 10 }}>{s.body}</p>
       <ul className="pl">{s.pts.map((p) => <li key={p}><Icon n="ck" />{p}</li>)}</ul>
       <div className="cta"><Link href="/#contact" className="btn">Book appointment <Icon n="ar" /></Link><a href={`tel:${SITE.tel}`} className="btn o"><Icon n="ph" />{SITE.phone}</a></div>
+      <p style={{ marginTop: 26, maxWidth: 760 }}>Treatment is planned and performed by <Link href="/about"><b>Dr. Sapna Sharma</b></Link>, Periodontist and Oral Implantologist. See <Link href="/reviews">patient reviews</Link>.</p>
       <h2 style={{ ...H2, marginTop: 70 }}>{s.name} in Rohtak: common questions</h2>
       <div style={{ marginTop: 22, maxWidth: 760 }}>{s.faq.map(([q, a]) => <details key={q} open><summary>{q}</summary><p>{a}</p></details>)}</div>
       <h2 style={{ ...H2, marginTop: 60 }}>Visit us in Rohtak</h2>
